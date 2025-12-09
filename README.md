@@ -11,6 +11,7 @@ A good python project typically has a combination of the following tools:
 - Use either `black` and `isort` or `ruff format` and `ruff check` for formatting your code and imports
 - use `flake8` for general linting and enforcing code standards.
 - use `pytest` for running unit tests.
+- configure `pytest` with `filterwarnings = error` to prevent warnings going unnoticed.
 - use `poetry` or `uv` for dependency management.
 
 ## Variable Names
