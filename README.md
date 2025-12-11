@@ -13,6 +13,7 @@ A good python project typically has a combination of the following tools:
 - use `pytest` for running unit tests.
 - configure `pytest` with `filterwarnings = error` to prevent warnings going unnoticed.
 - use `poetry` or `uv` for dependency management.
+- consider using `structlog` for simpler and better logging
 
 ## Variable Names
 
@@ -654,6 +655,18 @@ def do_something():
     logger.info("I just did something")
 ```
 
+If you are using `structlog`:
+
+```python
+# Good
+import structlog
+
+logger = structlog.get_logger(__name__)
+
+def do_something():
+    logger.info("I just did something")
+```
+
 <details>
 <summary>Why?</summary>
 Using a separate logger per module and using the module name allows us to filter,
@@ -687,6 +700,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.error("Something happened: %s", message)
+```
+
+If you are using `structlog`:
+
+```python
+# Good
+import structlog
+
+logger = logging.get_logger(__name__)
+logger.error("Something happened", message=message)
 ```
 
 <details>
