@@ -17,7 +17,7 @@ and can be applied generically to python projects.
 - [Properties](#properties)
 - [Return early / Fail fast](#return-early-fail-fast)
 - [Loggers](#loggers)
-- [Logging Parameters](#loggging-parametrs)
+- [Logging Parameters](#logging-parameters)
 - [Catching Exceptions](#catching-exceptions)
 - [Removing Prefixes and Suffixes](#removing-prefixes-and-suffixes)
 - [Serializing Dataclasses](#serializing-dataclasses)
