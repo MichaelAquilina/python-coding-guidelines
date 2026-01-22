@@ -2,6 +2,26 @@
 
 These are coding guidelines I've used with teams in the past and can be applied generically to python projects.
 
+- [Recommended Setup](#recommended-setup)
+- [Variable Names](#variable-names)
+- [Type Annotations](#type-annotations)
+- [Comments](#comments)
+- [Docstrings](#docstrings)
+- [Regular Expressions](#regular-expressions)
+- [Decimals](#decimals)
+- [Global Variables](#global-variables)
+- [Default Arguments](#default-arguments)
+- [Default Factory in Dataclasses](#default-factory-in-dataclasses)
+- [Test Structure and Organisation](#test-structure-and-organisation)
+- [Properties](#properties)
+- [Return early / Fail fast](#return-early-fail-fast)
+- [Loggers](#loggers)
+- [Logging Parameters](#loggging-parametrs)
+- [Catching Exceptions](#catching-exceptions)
+- [Removing Prefixes and Suffixes](#removing-prefixes-and-suffixes)
+- [Serializing Dataclasses](#serializing-dataclasses)
+- ["in" statements](#in-statements)
+
 ## Recommended Setup
 
 A good python project typically has a combination of the following tools:
@@ -63,9 +83,6 @@ knowledge.
 
 You should type annotate all function and method signatures. This should be enforced at the CI level. There is no need to type annotate individual variables unless [mypy](https://mypy.readthedocs.io/en/stable/) explicitly needs the help.
 
-Type annotations are _not_ needed for our tests and in fact should be avoided
-due to the common practice of mocking.
-
 <details>
 <summary>Why?</summary>
 
@@ -75,11 +92,11 @@ are.
 
 Type annotations are a powerful tool because we can use static analysis tools
 like `mypy` to check the correctness of the type annotations over time. If a
-function signature no longer matches with what mypy detects, CircleCI will warn
-us that the type annotations are no longer correct. This either means you have
+function signature no longer matches with what mypy detects, the CI should warn
+you that the type annotations are no longer correct. This either means you have
 mistakenly introduced a bug or you've changed the function signature and forgot
 to update it. In both cases, we've prevented a regression in our code which is
-great news for us. Yay for correctness!
+great news for us.
 
 </details>
 
@@ -797,7 +814,7 @@ assert "http://hp.com".lstrip("http://") == ".com"
 
 </details>
 
-## Dataclasses
+## Serializing Dataclasses
 
 Feel free to use dataclasses, but do **not** use the in-built `asdict` helper
 function when trying to serialize the data.
