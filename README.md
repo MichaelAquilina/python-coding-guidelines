@@ -1,6 +1,7 @@
 # Code Guidelines for Python
 
-These are coding guidelines I've used with teams in the past and can be applied generically to python projects.
+These are coding guidelines I've successfully used with teams in the past
+and can be applied generically to python projects.
 
 - [Recommended Setup](#recommended-setup)
 - [Variable Names](#variable-names)
