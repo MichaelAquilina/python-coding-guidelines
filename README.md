@@ -21,6 +21,7 @@ These are coding guidelines I've used with teams in the past and can be applied 
 - [Removing Prefixes and Suffixes](#removing-prefixes-and-suffixes)
 - [Serializing Dataclasses](#serializing-dataclasses)
 - ["in" statements](#in-statements)
+- [Absolute Imports](#absolute-imports)
 
 ## Recommended Setup
 
@@ -896,4 +897,31 @@ This helps readability in a few ways:
 - The code feels closer to plain text English.
 - Keeping both `not` and `in` in the same location makes it easier to understand and visually grep what the actual operation being performed is.
 
+</details>
+
+## Absolute Imports
+
+Prefer to use absolute imports in general, rather than relative imports.
+
+```python
+# Good
+from foobar.baz import bang
+```
+
+```python
+# Bad
+from .baz import bang
+```
+
+<details>
+<summary>Why?</summary>
+While there are some cases where relative imports might help readability, in general
+making use of relative imports makes it harder for the reader to understand where exactly
+an import is coming from.
+
+It either requires the reader to mentally calculate the location of the module themselves
+or use a tool like `go-to-definition` in their IDE to figure it out.
+In either case, that is wasted time and un-needed overhead.
+
+Absolute imports make it clear exactly where and what the module being imported is.
 </details>
