@@ -85,6 +85,23 @@ knowledge.
 
 You should type annotate all function and method signatures. This should be enforced at the CI level. There is no need to type annotate individual variables unless [mypy](https://mypy.readthedocs.io/en/stable/) explicitly needs the help.
 
+Prefer using inbuilt `dict`, `list`, `set` types for annotation to `Dict`, `List`, `Set`.
+
+```python
+# Good
+def foobar(a: dict, b: list, c: set) -> None:
+   ...
+```
+
+```python
+# Bad
+from typing import Dict, List, Set
+
+
+def foobar(a: Dict, b: List, c: Set) -> None:
+   ...
+```
+
 <details>
 <summary>Why?</summary>
 
