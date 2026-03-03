@@ -1,6 +1,6 @@
 ---
 name: python-review
-description: Review Python code against established coding guidelines and best practices. Use when reviewing code quality, checking for common pitfalls, or ensuring consistency with Python standards.
+description: Review Python code against established coding guidelines and best practices. Use after writing python code for the user, when reviewing code quality, checking for common pitfalls, or ensuring consistency with Python standards.
 allowed-tools: Read, Grep, Glob
 ---
 
