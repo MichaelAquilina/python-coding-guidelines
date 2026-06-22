@@ -1,6 +1,9 @@
 ---
 name: python-review
-description: Review Python code against established coding guidelines and best practices. Use after writing python code for the user, when reviewing code quality, checking for common pitfalls, or ensuring consistency with Python standards.
+description: >
+  Review Python code against established coding guidelines and best practices.
+  TRIGGER when: user asks to review code, review a PR/branch/diff, check code quality, or asks for a code review on Python files. Also trigger after writing Python code for the user.
+  DO NOT TRIGGER when: the code being reviewed is not Python, or the user is asking a general question rather than requesting a review.
 allowed-tools: Read, Grep, Glob
 ---
 

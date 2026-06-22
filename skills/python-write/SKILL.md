@@ -1,6 +1,6 @@
 ---
 name: python-write
-description: Explains how to write Python code following established coding guidelines and best practices. Use when creating new Python code, implementing features, or writing functions that should follow Python conventions.
+description: Coding guidelines and best practices to follow when writing Python. TRIGGER when: writing new Python files, implementing new functions or classes, or substantially rewriting existing Python code. This is a BLOCKING REQUIREMENT — invoke BEFORE producing any Python code. DO NOT TRIGGER when: only reading, searching, or reviewing Python code without writing it.
 ---
 
 # Python Code Writing
