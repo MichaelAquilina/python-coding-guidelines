@@ -152,7 +152,30 @@ class Config:
     items: list = field(default_factory=lambda: [1, 2, 3])
 ```
 
-### 10. Properties vs Methods
+### 10. Test Structure and Organisation
+- ✓ Tests for `foo/bar/filename.py` belong in `tests/foo/bar/test_filename.py`
+- ✓ Group tests for a function `do_something` under `class TestDoSomething`
+- ✓ Group tests for a class `SomeClass` under `class TestSomeClass`
+- ✗ Don't invent descriptive class-name variants that don't mirror the function/class name
+
+**Bad:**
+```python
+class TestDoSomethingHandlesEdgeCases:
+    def test_it_works(self) -> None:
+        pass
+```
+
+**Good:**
+```python
+class TestDoSomething:
+    def test_correct_values(self) -> None:
+        pass
+
+    def test_zero(self) -> None:
+        pass
+```
+
+### 11. Properties vs Methods
 - ✓ Prefer explicit methods over properties
 - ✗ Properties hide computational cost
 
@@ -169,7 +192,7 @@ def get_user_count(self) -> int:
     return db.count_users()  # Clear this may be expensive
 ```
 
-### 11. Early Returns / Fail Fast
+### 12. Early Returns / Fail Fast
 - ✓ Validate failures upfront
 - ✓ Reduce nesting with early returns
 
@@ -194,7 +217,7 @@ def process(data: dict) -> str | None:
     return result
 ```
 
-### 12. Loggers
+### 13. Loggers
 - ✓ Use module-level logger: `logger = logging.getLogger(__name__)`
 - ✗ Never use root logger: `logging.info()`
 
@@ -212,7 +235,7 @@ def do_work():
     logger.info("Working...")
 ```
 
-### 13. Logging Parameters
+### 14. Logging Parameters
 - ✓ Use parameter passing, not f-strings
 - Enables downstream tools to group/filter logs
 
@@ -228,7 +251,7 @@ logger.error("Error: %s", msg)
 logger.error("Error occurred", message=msg)
 ```
 
-### 14. Exception Handling
+### 15. Exception Handling
 - ✗ NEVER use bare `except:`
 - ✓ Use `except Exception:` to allow KeyboardInterrupt propagation
 
@@ -248,7 +271,7 @@ except Exception:
     logger.exception("Operation failed")
 ```
 
-### 15. String Prefix/Suffix Removal
+### 16. String Prefix/Suffix Removal
 - ✓ Use `removeprefix()` and `removesuffix()`
 - ✗ NEVER use `lstrip()`/`rstrip()` for this (they treat input as character sets!)
 
@@ -262,7 +285,7 @@ except Exception:
 "bison.json".removesuffix(".json")  # Returns "bison"
 ```
 
-### 16. Dataclass Serialization
+### 17. Dataclass Serialization
 - ✓ Define explicit `to_dict()` method
 - ✗ Avoid `asdict()` for non-trivial types
 
@@ -281,7 +304,7 @@ class Data:
         return {"counts": dict(self.counts)}
 ```
 
-### 17. Membership Testing
+### 18. Membership Testing
 - ✓ Use `not in` operator
 - ✗ Avoid `not ... in`
 
@@ -297,7 +320,7 @@ if item not in collection:
     pass
 ```
 
-### 18. Imports
+### 19. Imports
 - ✓ Use absolute imports
 - ✗ Avoid relative imports
 

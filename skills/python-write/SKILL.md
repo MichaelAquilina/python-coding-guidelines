@@ -143,7 +143,56 @@ class Config:
     items: list = [1, 2, 3]
 ```
 
-### 9. Properties vs Methods
+### 9. Test Structure and Organisation
+✓ Tests for `foo/bar/filename.py` live in `tests/foo/bar/test_filename.py`
+✓ Group tests for `do_something` under `class TestDoSomething`
+✓ Group tests for `class SomeClass` under `class TestSomeClass`
+
+```python
+# foo/bar/filename.py
+def do_something(a: int, b: int) -> int:
+    pass
+
+
+class SomeClass:
+    def get_values(self) -> list:
+        pass
+
+    def run(self) -> None:
+        pass
+```
+
+```python
+# tests/foo/bar/test_filename.py
+
+# Good
+class TestDoSomething:
+    def test_correct_values(self) -> None:
+        pass
+
+    def test_zero(self) -> None:
+        pass
+
+
+class TestSomeClass:
+    def test_get_values(self) -> None:
+        pass
+
+    def test_run_succeeds(self) -> None:
+        pass
+
+    def test_run_fails(self) -> None:
+        pass
+```
+
+```python
+# Bad - class name doesn't mirror the function/class under test
+class TestDoSomethingHandlesEdgeCases:
+    def test_it_works(self) -> None:
+        pass
+```
+
+### 10. Properties vs Methods
 ✓ Prefer explicit methods over properties
 ✗ Properties hide computational cost
 
@@ -158,7 +207,7 @@ def user_count(self) -> int:
     return db.count_users()
 ```
 
-### 10. Early Returns / Fail Fast
+### 11. Early Returns / Fail Fast
 ✓ Validate failures upfront
 ✓ Reduce nesting with early returns
 
@@ -181,7 +230,7 @@ def process(data: dict) -> str:
                 return result
 ```
 
-### 11. Loggers
+### 12. Loggers
 ✓ Use module-level logger with `__name__`
 ✗ Never use root logger
 
@@ -202,7 +251,7 @@ def do_work():
     logger.info("Working...")
 ```
 
-### 12. Logging Parameters
+### 13. Logging Parameters
 ✓ Use parameter passing for structured logging
 ✗ Avoid f-strings in log messages
 
@@ -217,7 +266,7 @@ logger.error("Error occurred", message=error_msg, user_id=user_id)
 logger.error(f"Error occurred: {error_msg}")
 ```
 
-### 13. Exception Handling
+### 14. Exception Handling
 ✓ Use `except Exception:` to catch exceptions
 ✗ NEVER use bare `except:`
 
@@ -235,7 +284,7 @@ except:
     logger.exception("Operation failed")
 ```
 
-### 14. String Prefix/Suffix Removal
+### 15. String Prefix/Suffix Removal
 ✓ Use `removeprefix()` and `removesuffix()`
 ✗ NEVER use `lstrip()` or `rstrip()` for this purpose
 
@@ -248,7 +297,7 @@ url = "http://example.com".removeprefix("http://")  # Returns "example.com"
 filename = "bison.json".rstrip(".json")  # Returns "bi" (removes all ., j, s, o, n chars!)
 ```
 
-### 15. Dataclass Serialization
+### 16. Dataclass Serialization
 ✓ Define explicit `to_dict()` method
 ✗ Avoid `asdict()` for non-trivial types
 
@@ -273,7 +322,7 @@ data = Data(counts=Counter("hello"))
 result = asdict(data)  # May not serialize correctly
 ```
 
-### 16. Membership Testing
+### 17. Membership Testing
 ✓ Use `not in` operator
 ✗ Avoid `not ... in`
 
@@ -287,7 +336,7 @@ if not item in collection:
     pass
 ```
 
-### 17. Imports
+### 18. Imports
 ✓ Use absolute imports
 ✗ Avoid relative imports
 
