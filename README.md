@@ -970,7 +970,7 @@ def get_example() -> bar.ExampleType:
 
 <details>
 <summary>Why?</summary>
-The main here is to keep function signatures as short as possible. This should
+The main goal here is to keep function signatures as short as possible. This should
 result in function signatures that are easier to visually grep and understand.
 
 `bar.ExampleType` makes the reader carry the module prefix around while parsing
@@ -978,9 +978,14 @@ the signature. That cost adds up quickly in signatures with several parameters
 and a return type.
 
 This is a preference rather than a rule and there may be cases where it is more
-readable to actually prefix the module name. As an example, if two modules export
-types with the same name, importing the module (or using `as` to rename one of them)
-is clearer than having two identically named types in the same file.
+readable to actually prefix the module name.
+
+Some common examples:
+- Two modules export types with the same name. It is clearer to distinguish
+  these names via a module prefix in this scenario.
+- Modules such as pandas and numpy which are imported globally as a shorthand alias.
+  In this case, it is better to use `pd.Series` and `np.ndarray` as type annotations
+  for example.
 </details>
 
 ## Ordering Functions and Classes

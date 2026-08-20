@@ -340,7 +340,9 @@ from myapp.config import settings
 - ✓ Prefer importing the type itself, not the module holding it
 - ✓ Goal is short signatures that are easy to visually grep
 - ✗ Avoid module-qualified annotations like `bar.ExampleType`
-- A preference, not a rule. Prefixing the module is sometimes more readable — for example when two modules export the same type name, import the module or rename with `as`. Raise this as MINOR only.
+- A preference, not a rule. Raise as MINOR only, and don't raise it at all in these cases:
+  - Two modules export the same type name, so a module prefix tells them apart
+  - Modules conventionally imported under a short alias, such as `pd.Series` or `np.ndarray`
 
 **Bad:**
 ```python

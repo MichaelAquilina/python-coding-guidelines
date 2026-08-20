@@ -372,8 +372,11 @@ def get_example() -> bar.ExampleType:
 ```
 
 This is a preference, not a rule. Prefixing the module is sometimes more
-readable — for example when two modules export types with the same name,
-import the module or use `as` to rename one of them.
+readable. Two common cases:
+
+- Two modules export types with the same name. A module prefix tells them apart.
+- Modules conventionally imported under a short alias, such as pandas and numpy.
+  Prefer `pd.Series` and `np.ndarray` in annotations.
 
 ### 20. Ordering Functions and Classes
 ✓ Put entry level code (what callers outside the module use) at the top
