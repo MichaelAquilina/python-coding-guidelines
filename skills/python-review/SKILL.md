@@ -336,6 +336,65 @@ from myapp.utils import helper
 from myapp.config import settings
 ```
 
+### 20. Direct Imports in Type Annotations
+- ✓ Prefer importing the type itself, not the module holding it
+- ✓ Goal is short signatures that are easy to visually grep
+- ✗ Avoid module-qualified annotations like `bar.ExampleType`
+- A preference, not a rule. Prefixing the module is sometimes more readable — for example when two modules export the same type name, import the module or rename with `as`. Raise this as MINOR only.
+
+**Bad:**
+```python
+from foo import bar
+
+
+def get_example() -> bar.ExampleType:
+    ...
+```
+
+**Good:**
+```python
+from foo.bar import ExampleType
+
+
+def get_example() -> ExampleType:
+    ...
+```
+
+### 21. Ordering Functions and Classes
+- ✓ Entry level code (what callers outside the module use) goes at the top
+- ✓ Each helper goes directly below the function that uses it
+- ✗ Don't force the reader bottom-up through helpers before the code that gives them meaning
+
+**Bad:**
+```python
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+```
+
+**Good:**
+```python
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+```
+
 ## Output Format
 
 For each issue found, provide:

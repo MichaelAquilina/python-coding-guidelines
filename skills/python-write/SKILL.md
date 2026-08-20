@@ -350,6 +350,64 @@ from .utils import helper
 from ..config import settings
 ```
 
+### 19. Direct Imports in Type Annotations
+✓ Prefer importing the type itself, not the module holding it
+✓ Goal is short signatures that are easy to visually grep
+✗ Avoid module-qualified annotations like `bar.ExampleType`
+
+```python
+# Good
+from foo.bar import ExampleType
+
+
+def get_example() -> ExampleType:
+    ...
+
+# Bad
+from foo import bar
+
+
+def get_example() -> bar.ExampleType:
+    ...
+```
+
+This is a preference, not a rule. Prefixing the module is sometimes more
+readable — for example when two modules export types with the same name,
+import the module or use `as` to rename one of them.
+
+### 20. Ordering Functions and Classes
+✓ Put entry level code (what callers outside the module use) at the top
+✓ Put each helper directly below the function that uses it
+✗ Don't force the reader bottom-up through helpers first
+
+```python
+# Good
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+
+# Bad - helpers first, purpose of the module last
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+```
+
 ## Recommended Development Setup
 
 When setting up a Python project, include:

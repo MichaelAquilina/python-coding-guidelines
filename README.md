@@ -23,6 +23,8 @@ and can be applied generically to python projects.
 - [Serializing Dataclasses](#serializing-dataclasses)
 - ["in" statements](#in-statements)
 - [Absolute Imports](#absolute-imports)
+- [Direct Imports in Type Annotations](#direct-imports-in-type-annotations)
+- [Ordering Functions and Classes](#ordering-functions-and-classes)
 
 ## Recommended Setup
 
@@ -942,4 +944,96 @@ or use a tool like `go-to-definition` in their IDE to figure it out.
 In either case, that is wasted time and un-needed overhead.
 
 Absolute imports make it clear exactly where and what the module being imported is.
+</details>
+
+## Direct Imports in Type Annotations
+
+Prefer to import the type itself, rather than the module that contains it.
+
+```python
+# Good
+from foo.bar import ExampleType
+
+
+def get_example() -> ExampleType:
+    ...
+```
+
+```python
+# Bad
+from foo import bar
+
+
+def get_example() -> bar.ExampleType:
+    ...
+```
+
+<details>
+<summary>Why?</summary>
+The main here is to keep function signatures as short as possible. This should
+result in function signatures that are easier to visually grep and understand.
+
+`bar.ExampleType` makes the reader carry the module prefix around while parsing
+the signature. That cost adds up quickly in signatures with several parameters
+and a return type.
+
+This is a preference rather than a rule and there may be cases where it is more
+readable to actually prefix the module name. As an example, if two modules export
+types with the same name, importing the module (or using `as` to rename one of them)
+is clearer than having two identically named types in the same file.
+</details>
+
+## Ordering Functions and Classes
+
+Order functions and classes in the order they are likely to be read.
+
+Put the entry level code at the top. That is whatever is meant to be called
+from outside the module. Put the helpers each function uses below it.
+
+```python
+# Good
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+```
+
+```python
+# Bad
+def build_receipt(order: Order, total: Decimal) -> Receipt:
+    ...
+
+
+def calculate_total(order: Order) -> Decimal:
+    return sum(line.price for line in order.lines)
+
+
+def process_order(order: Order) -> Receipt:
+    total = calculate_total(order)
+    return build_receipt(order, total)
+```
+
+<details>
+<summary>Why?</summary>
+Someone opening a module usually wants to know what it is for before they care
+how it works. Leading with the public entry points answers that question in the
+first few lines.
+
+It also lets the reader stop early. Once they understand the top level function,
+they can decide whether they need to read the helpers at all. Bottom up ordering
+forces them to read every detail before they reach the part that gives those
+details meaning.
+
+Keeping a helper directly below its caller keeps related code close together,
+so following a call means scrolling down rather than jumping around the file.
+
+Python does not care about definition order for anything called at runtime, so
+this is purely a readability choice and costs nothing.
 </details>
