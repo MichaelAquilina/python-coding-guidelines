@@ -1042,3 +1042,69 @@ so following a call means scrolling down rather than jumping around the file.
 Python does not care about definition order for anything called at runtime, so
 this is purely a readability choice and costs nothing.
 </details>
+
+## Keep `__init__.py` Empty
+
+As a general rule, leave `__init__.py` empty and import each name from the
+module that actually defines it.
+
+```python
+# Good
+
+# mypackage/__init__.py is empty
+
+from mypackage.models import Order
+from mypackage.tasks import process_order
+```
+
+```python
+# Bad
+
+# mypackage/__init__.py
+from mypackage.models import Order
+from mypackage.tasks import process_order
+
+__all__ = ["Order", "process_order"]
+```
+
+Similarly, avoid putting functions, classes or anything else that
+is importable within your `__init__.py` files.
+
+```python
+# Bad
+
+DEFAULT_TIMEOUT = 30
+
+
+def get_client() -> Client:
+    ...
+```
+
+<details>
+<summary>Why?</summary>
+Re-exporting gives every name two valid import paths. Some files will use one
+and some the other, so searching for who uses a thing means searching twice and
+remembering to.
+
+The re-export list is a second copy of information that already exists. Rename a
+class and you now have two places to update. Delete one and the list quietly
+keeps pointing at something that no longer exists.
+
+An import of the package runs everything the `__init__.py` names. A module that
+only wants one small helper ends up loading every dependency of every sibling,
+which slows startup and can pull heavy libraries into processes that had no need
+for them.
+
+It also invites circular imports. A submodule that imports from its own package
+root makes the root import that submodule's siblings, and one of those importing
+back is enough to break the cycle open at an awkward point.
+
+Finally, `from mypackage import Order` does not say where `Order` lives, so the
+reader has to open `__init__.py` to find out. `from mypackage.models import
+Order` already answered the question.
+
+As always, there may be exceptions to this rule which may _require_ or sometimes
+make the code better to use by including it in to `__init__.py`. However, this rule
+should be followed where possible for consistency and for the reasons outlined
+above.
+</details>

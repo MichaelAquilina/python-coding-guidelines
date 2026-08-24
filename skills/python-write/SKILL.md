@@ -411,6 +411,46 @@ def process_order(order: Order) -> Receipt:
     return build_receipt(order, total)
 ```
 
+### 21. Keep `__init__.py` Empty
+✓ Leave `__init__.py` empty and import each name from the module that defines it
+✗ Don't re-export names or declare `__all__` in `__init__.py`
+✗ Don't define functions, classes or constants in `__init__.py`
+
+```python
+# Good
+# mypackage/__init__.py is empty
+
+from mypackage.models import Order
+from mypackage.tasks import process_order
+
+# Bad - mypackage/__init__.py
+from mypackage.models import Order
+from mypackage.tasks import process_order
+
+__all__ = ["Order", "process_order"]
+
+# Bad - anything importable defined in mypackage/__init__.py
+DEFAULT_TIMEOUT = 30
+
+
+def get_client() -> Client:
+    ...
+```
+
+Re-exporting gives every name two valid import paths, so searching for who uses
+a thing means searching twice. The list is a second copy of information that
+already exists, and it has to be kept in sync by hand.
+
+Importing the package runs everything `__init__.py` names, so a module that
+wants one small helper loads every dependency of every sibling. That slows
+startup and invites circular imports.
+
+`from mypackage import Order` also does not say where `Order` lives.
+`from mypackage.models import Order` already answered the question.
+
+There may be exceptions where a package genuinely reads better with something in
+`__init__.py`, but follow this where possible.
+
 ## Recommended Development Setup
 
 When setting up a Python project, include:

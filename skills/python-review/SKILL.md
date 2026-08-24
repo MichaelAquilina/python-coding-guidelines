@@ -397,6 +397,36 @@ def build_receipt(order: Order, total: Decimal) -> Receipt:
     ...
 ```
 
+### 22. Empty `__init__.py`
+- ✓ Leave `__init__.py` empty and import each name from the module that defines it
+- ✗ Don't re-export names in `__init__.py` or declare `__all__` there
+- ✗ Don't define functions, classes or constants in `__init__.py`
+- Re-exports give every name two import paths, duplicate information that must be kept in sync, make importing the package pull in every sibling's dependencies, and invite circular imports
+- There are legitimate exceptions where a package's public API genuinely reads better through `__init__.py`. Raise this as MINOR only.
+
+**Bad:**
+```python
+# mypackage/__init__.py
+from mypackage.models import Order
+from mypackage.tasks import process_order
+
+__all__ = ["Order", "process_order"]
+
+DEFAULT_TIMEOUT = 30
+
+
+def get_client() -> Client:
+    ...
+```
+
+**Good:**
+```python
+# mypackage/__init__.py is empty
+
+from mypackage.models import Order
+from mypackage.tasks import process_order
+```
+
 ## Output Format
 
 For each issue found, provide:
