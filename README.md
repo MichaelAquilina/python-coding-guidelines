@@ -25,6 +25,7 @@ and can be applied generically to python projects.
 - [Absolute Imports](#absolute-imports)
 - [Direct Imports in Type Annotations](#direct-imports-in-type-annotations)
 - [Ordering Functions and Classes](#ordering-functions-and-classes)
+- [Assert Statements](#assert-statements)
 
 ## Recommended Setup
 
@@ -1107,4 +1108,68 @@ As always, there may be exceptions to this rule which may _require_ or sometimes
 make the code better to use by including it in to `__init__.py`. However, this rule
 should be followed where possible for consistency and for the reasons outlined
 above.
+</details>
+
+## Assert Statements
+
+Only use `assert` in tests. In all other code, check the condition with an `if`
+and raise a specific exception.
+
+```python
+# Good
+def withdraw(account: Account, amount: Decimal) -> None:
+    if amount <= 0:
+        raise ValueError(f"Amount must be positive, got {amount}")
+    ...
+```
+
+```python
+# Bad
+def withdraw(account: Account, amount: Decimal) -> None:
+    assert amount > 0
+    ...
+```
+
+This includes asserts that only exist to help `mypy` narrow a type.
+
+```python
+# Good
+if not isinstance(response, SuccessResponse):
+    raise TypeError(f"Expected SuccessResponse, got {type(response).__name__}")
+```
+
+```python
+# Bad
+assert isinstance(response, SuccessResponse)
+```
+
+You can enforce this with the `S101` rule in `ruff` (or `flake8-bandit`).
+Turn the rule off for your test files only.
+
+```toml
+[tool.ruff.lint]
+extend-select = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+```
+
+<details>
+<summary>Why?</summary>
+Python removes every `assert` statement when it runs with the `-O` flag or with
+the `PYTHONOPTIMIZE` environment variable set. Your check then silently stops
+running. The code carries on with bad data instead of failing, and the failure
+shows up later in a place that is much harder to debug.
+
+You do not always control how your code runs. A deployment script, a container
+image or a downstream user can turn on `-O` without you knowing.
+
+`AssertionError` also tells the caller very little. A caller cannot sensibly
+catch it, because it does not say what went wrong. A `ValueError`, a
+`TypeError` or your own exception class says what kind of problem happened, and
+the caller can choose to handle it.
+
+Tests are different. `pytest` rewrites `assert` statements to show a detailed
+message when they fail. Tests are also not meant to run with `-O`. Plain
+`assert` is the right tool there.
 </details>

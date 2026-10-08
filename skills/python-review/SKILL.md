@@ -427,6 +427,29 @@ from mypackage.models import Order
 from mypackage.tasks import process_order
 ```
 
+### 23. Assert Statements
+- ✓ Only use `assert` in tests
+- ✓ Outside tests, check the condition with `if` and raise a specific exception
+- ✗ Don't use `assert` to help mypy narrow a type. Use `if not isinstance(...)` and raise `TypeError`
+- Python removes every `assert` when it runs with `-O` or `PYTHONOPTIMIZE`, so the check silently stops running
+- `AssertionError` does not tell the caller what went wrong, so the caller cannot sensibly handle it
+- Raise as IMPORTANT. Ignore `assert` in test files, where `pytest` relies on it
+
+**Bad:**
+```python
+def withdraw(account: Account, amount: Decimal) -> None:
+    assert amount > 0
+    ...
+```
+
+**Good:**
+```python
+def withdraw(account: Account, amount: Decimal) -> None:
+    if amount <= 0:
+        raise ValueError(f"Amount must be positive, got {amount}")
+    ...
+```
+
 ## Output Format
 
 For each issue found, provide:

@@ -451,6 +451,39 @@ startup and invites circular imports.
 There may be exceptions where a package genuinely reads better with something in
 `__init__.py`, but follow this where possible.
 
+### 22. Assert Statements
+✓ Only use `assert` in tests
+✓ Outside tests, check the condition with `if` and raise a specific exception
+✗ Don't use `assert` to help mypy narrow a type
+
+```python
+# Good
+def withdraw(account: Account, amount: Decimal) -> None:
+    if amount <= 0:
+        raise ValueError(f"Amount must be positive, got {amount}")
+    ...
+
+
+if not isinstance(response, SuccessResponse):
+    raise TypeError(f"Expected SuccessResponse, got {type(response).__name__}")
+
+# Bad
+def withdraw(account: Account, amount: Decimal) -> None:
+    assert amount > 0
+    ...
+
+
+assert isinstance(response, SuccessResponse)
+```
+
+Python removes every `assert` when it runs with `-O` or `PYTHONOPTIMIZE`. The
+check then silently stops running and the code carries on with bad data.
+`AssertionError` also does not tell the caller what went wrong. A specific
+exception does, and the caller can choose to handle it.
+
+In tests, plain `assert` is correct. `pytest` rewrites it to show a detailed
+message when it fails.
+
 ## Recommended Development Setup
 
 When setting up a Python project, include:
